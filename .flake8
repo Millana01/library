@@ -1,0 +1,9 @@
+[flake8]
+# Exclude error E501: line too long (82 > 79 characters).
+max-line-length=120
+# Cyclomatic complexity threshold for radon.
+radon-max-cc = 10
+exclude = .git,__pycache__,*/BIS_BFAM/git_hook/pre-commit,*/BIS_BFAM/git_hook/Readme.md,
+			.gitignore,*.yml,*.yaml,*.toml,*.apk,*.list,*.txt,allurectl,venv,env,.idea,Dockerfile*,
+			results*,reports*,.vscode,ci,.flake8,*.ini,*.md,stubs/*,*.lock,alembic
+filename = *.py, */git_hook/*
