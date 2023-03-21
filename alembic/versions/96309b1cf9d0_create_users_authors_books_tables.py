@@ -42,7 +42,7 @@ def upgrade() -> None:
     )
     op.create_table(
         "authors",
-        sa.Column("id", sa.Integer, primary_key=True, index=True),
+        sa.Column("id", sa.Integer, primary_key=True, index=True, autoincrement=True),
         sa.Column("name", sa.String(50), unique=True, index=True),
     )
     op.create_table(

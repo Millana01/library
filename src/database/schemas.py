@@ -43,7 +43,7 @@ class AuthorBase(BaseModel):
 
 
 class AuthorCreate(AuthorBase):
-    ...
+    id: Optional[int]
 
 
 class Author(AuthorBase):
