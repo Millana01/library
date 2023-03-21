@@ -6,9 +6,11 @@ from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from sqlalchemy.orm import Session
 
 from src.config import Config
 from src.database.crud.users import UserQueries
+from src.dependencies import get_db
 from src.users.schemas import User
 
 from .schemas import TokenData
@@ -21,8 +23,8 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def authenticate_user(username: str, password: str):
-    user = get_user(username=username)
+def authenticate_user(db: Session, username: str, password: str):
+    user = get_user(db, username=username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -41,11 +43,13 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     return encoded_jwt
 
 
-def get_user(username: str):
-    return UserQueries().get_user_by_username(username)
+def get_user(db: Session, username: str):
+    return UserQueries.get_user_by_username(db, username)
 
 
-async def get_current_user(token_: str = Depends(oauth2_scheme)):
+async def get_current_user(
+    token_: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -59,7 +63,7 @@ async def get_current_user(token_: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(token_data.username)
+    user = get_user(db, token_data.username)
     if user is None:
         raise credentials_exception
     return user

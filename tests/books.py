@@ -1,3 +1,4 @@
+from fastapi import status
 from fastapi.testclient import TestClient
 
 from main import app
@@ -15,7 +16,7 @@ def test_create_book():
             "author": "Tolstoy",
         },
     )
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     r_json: dict = response.json()
     exp_fields = ("id", "title", "description", "author_id", "available_count")
     assert exp_fields in r_json
@@ -23,7 +24,7 @@ def test_create_book():
 
 def test_get_books():
     response = client.get("/books", params={"skip": 0, "limit": 3})
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     r_json: dict = response.json()
     assert len(r_json) <= 3
     exp_fields = (
@@ -40,7 +41,7 @@ def test_get_books():
 
 def test_get_book_by_id():
     response = client.get("/books/2")
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     r_json: dict = response.json()
     exp_fields = ("id", "title", "description", "author_id", "available_count")
     assert exp_fields in r_json
@@ -48,5 +49,5 @@ def test_get_book_by_id():
 
 def test_delete_book():
     response = client.delete("/books/2")
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"message": "Book with id=2 deleted"}

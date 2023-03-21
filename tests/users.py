@@ -1,3 +1,4 @@
+from fastapi import status
 from fastapi.testclient import TestClient
 
 from main import app
@@ -15,7 +16,7 @@ def test_create_user():
             "author": "Tolstoy",
         },
     )
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     r_json: dict = response.json()
     exp_fields = ("id", "title", "description", "author_id", "available_count")
     assert exp_fields in r_json
@@ -23,7 +24,7 @@ def test_create_user():
 
 def test_get_users():
     response = client.get("/users", params={"skip": 0, "limit": 3})
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     r_json: dict = response.json()
     assert len(r_json) <= 3
     exp_fields = ("id", "username", "is_active")

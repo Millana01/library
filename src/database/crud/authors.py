@@ -1,48 +1,44 @@
-from src.database import base
-from src.database.base import LibraryDB
+from sqlalchemy.orm import Session
+
 from src.database.models import AuthorBooks, Authors
 from src.database.schemas import AuthorCreate
-from src.helpers.singleton import Singleton
 
 
-class AuthorsQueries(metaclass=Singleton):
-    def __init__(self, db: base.BaseDB = None):
-        self.db = db or LibraryDB()
+class AuthorsQueries:
+    @staticmethod
+    def get_author_id_by_name(db: Session, name: str):
+        return db.query(Authors.id).filter(Authors.name == name).scalar()
 
-    def get_author_id_by_name(self, name: str):
-        with self.db.create_session() as session:
-            return session.query(Authors.id).filter(Authors.name == name).scalar()
+    @staticmethod
+    def get_author_by_id(db: Session, author_id: int):
+        return db.query(Authors).filter(Authors.id == author_id).first()
 
-    def get_author_by_id(self, author_id: int):
-        with self.db.create_session() as session:
-            return session.query(Authors).filter(Authors.id == author_id).first()
+    @staticmethod
+    def get_authors(db: Session, skip: int = 0, limit: int = 20):
+        return db.query(Authors).offset(skip).limit(limit).all()
 
-    def get_authors(self, skip: int = 0, limit: int = 20):
-        with self.db.create_session() as session:
-            return session.query(Authors).offset(skip).limit(limit).all()
+    @staticmethod
+    def delete_author(db: Session, author_id: int):
+        db.query(Authors).filter(Authors.id == author_id).delete()
+        db.commit()
 
-    def delete_author(self, author_id: int):
-        with self.db.create_session() as session:
-            session.query(Authors).filter(Authors.id == author_id).delete()
-            session.commit()
+    @staticmethod
+    def create_author(db: Session, author: AuthorCreate):
+        db_author = Authors(name=author.name, id=author.id)
+        db.add(db_author)
+        db.commit()
+        db.refresh(db_author)
+        return db_author
 
-    def create_author(self, author: AuthorCreate):
-        with self.db.create_session() as session:
-            db_author = Authors(name=author.name)
-            session.add(db_author)
-            session.commit()
-            session.refresh(db_author)
-            return db_author
+    @staticmethod
+    def create_author_books(db: Session, author_id: int, book_id: int):
+        author_book = AuthorBooks(author_id=author_id, book_id=book_id)
+        db.add(author_book)
+        db.commit()
+        db.refresh(author_book)
+        return author_book
 
-    def create_author_books(self, author_id: int, book_id: int):
-        with self.db.create_session() as session:
-            author_book = AuthorBooks(author_id=author_id, book_id=book_id)
-            session.add(author_book)
-            session.commit()
-            session.refresh(author_book)
-            return author_book
-
-    def delete_author_books(self, book_id: int):
-        with self.db.create_session() as session:
-            session.query(AuthorBooks).filter(AuthorBooks.book_id == book_id).delete()
-            session.commit()
+    @staticmethod
+    def delete_author_books(db: Session, book_id: int):
+        db.query(AuthorBooks).filter(AuthorBooks.book_id == book_id).delete()
+        db.commit()
