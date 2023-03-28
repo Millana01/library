@@ -5,11 +5,10 @@ from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from src.config import Config
-from src.dependencies import get_db
-
-from .dependencies import authenticate_user, create_access_token
-from .schemas import Token
+from src.app.auth.dependencies import authenticate_user, create_access_token
+from src.app.auth.schemas import Token
+from src.app.config import Config
+from src.app.database.dependencies import get_db
 
 router = APIRouter()
 

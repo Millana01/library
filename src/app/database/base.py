@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from src.config import Config
+from src.app.config import Config
 
 engine = create_engine(
     Config.db_url.format(

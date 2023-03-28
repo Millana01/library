@@ -1,12 +1,11 @@
-from src.authors.router import (
+from src.app.authors.router import (
     create_author,
     delete_author,
     get_author_by_id,
     get_authors,
 )
-from src.database.schemas import AuthorCreate
-
-from .db_session import SessionMixin
+from src.app.schemas.author import AuthorCreate
+from src.tests.db_session import SessionMixin
 
 
 def test_create_author(snapshot):

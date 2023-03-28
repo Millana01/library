@@ -8,12 +8,11 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from src.config import Config
-from src.database.crud.users import UserQueries
-from src.dependencies import get_db
-from src.users.schemas import User
-
-from .schemas import TokenData
+from src.app.auth.schemas import TokenData
+from src.app.config import Config
+from src.app.database.crud import users as users_queries
+from src.app.database.dependencies import get_db
+from src.app.users.schemas import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -44,7 +43,7 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
 
 
 def get_user(db: Session, username: str):
-    return UserQueries.get_user_by_username(db, username)
+    return users_queries.get_user_by_username(db, username)
 
 
 async def get_current_user(

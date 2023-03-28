@@ -2,7 +2,7 @@ from fastapi import Depends
 from fastapi.params import Depends as DependsType
 from sqlalchemy.orm import Session
 
-from src.dependencies import get_db
+from src.app.database.dependencies import get_db
 
 
 class SessionMixin:
