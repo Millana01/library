@@ -6,8 +6,10 @@ from sqlalchemy.orm import Session
 
 from src.app.authors import checkers as authors_checker
 from src.app.books import checkers as book_checker
+from src.app.users import checkers as user_checker
 from src.app.database.crud import authors as authors_queries
 from src.app.database.crud import books as books_queries
+from src.app.database.crud import users as users_queries
 from src.app.database.dependencies import get_db
 from src.app.schemas.book import Books, BooksCreate
 
@@ -41,6 +43,9 @@ def get_book_by_id(book_id: int, db: Session = Depends(get_db)):
 @router.delete("/{book_id}")
 def delete_book(book_id: int, db: Session = Depends(get_db)) -> Response:
     book_checker.check_book_exists(db, book_id)
+    user_book = user_checker.check_user_book_by_book_id(db, book_id)
+    if user_book:
+        users_queries.delete_user_book(db, book_id, user_book.user_id)
     authors_queries.delete_author_book(db, book_id)
     books_queries.delete_book(db, book_id)
     return JSONResponse(

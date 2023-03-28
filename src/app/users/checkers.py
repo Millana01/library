@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import status
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
 from src.app.database.crud import users as users_queries
-from src.app.database.models import User, UserBooks
+from src.app.database.models.users import User, UserBooks
 
 
 def check_user_not_exists(db: Session, user_username: str) -> None:
@@ -34,3 +34,10 @@ def check_user_books_exist(db: Session, user_id: int) -> List[UserBooks]:
             detail="There are no books on this user",
         )
     return user_books
+
+
+def check_user_book_by_book_id(db: Session, book_id: int) -> Optional[UserBooks]:
+    user_book = users_queries.get_user_book_by_book_id(db, book_id)
+    if not user_book:
+        return None
+    return user_book

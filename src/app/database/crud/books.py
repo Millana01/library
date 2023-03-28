@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.app.database.models import Books
+from src.app.database.models.books import Books
 from src.app.schemas.book import BooksCreate
 
 

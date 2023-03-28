@@ -69,7 +69,7 @@ async def reserve_book(
     ).available_count
     available_count -= 1
     books_queries.update_available_count(db, book_id, available_count)
-    user_book = users_queries.get_user_book_by_book_id(db, book_id)
+    user_book = user_checker.check_user_book_by_book_id(db, book_id)
     if user_book:
         user_book.count += 1
         users_queries.update_user_book_count(db, user_book.id, user_book.count)
@@ -92,7 +92,7 @@ async def return_book(
     ).available_count
     available_count += 1
     books_queries.update_available_count(db, book_id, available_count)
-    user_book = users_queries.get_user_book_by_book_id(db, book_id)
+    user_book = user_checker.check_user_book_by_book_id(db, book_id)
     if user_book.count > 1:
         user_book.count -= 1
         users_queries.update_user_book_count(db, user_book.id, user_book.count)

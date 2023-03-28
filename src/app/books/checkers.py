@@ -3,7 +3,7 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
 from src.app.database.crud import books as books_queries
-from src.app.database.models import Books
+from src.app.database.models.books import Books
 
 
 def check_book_not_exists(db: Session, author_id: int, book_title: str) -> None:

@@ -2,7 +2,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from src.app.database.models import AuthorBooks, Authors
+from src.app.database.models.authors import AuthorBooks, Authors
 from src.app.schemas.author import AuthorCreate
 
 

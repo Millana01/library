@@ -3,7 +3,7 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
 from src.app.database.crud import authors
-from src.app.database.models import Authors
+from src.app.database.models.authors import Authors
 
 
 def check_author_exists(db: Session, author_id: int) -> Authors:

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
-from src.app.database.models import Books, User, UserBooks
+from src.app.database.models.users import User, UserBooks
+from src.app.database.models.books import Books
 from src.app.schemas.user import UserCreate
 
 
